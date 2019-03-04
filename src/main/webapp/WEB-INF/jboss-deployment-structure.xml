@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.1">
+<deployment>
+	<exclusions>
+		<module name="org.apache.commons.logging" />
+	</exclusions>
+	<dependencies>
+		<module name="pe.com.petroperu.conexionad" slot="main" export="true"/>
+		<module name="pe.com.petroperu.library.log4j" slot="1.2.14" export="true"/>
+		<module name="pe.com.petroperu.library.mail" slot="1.4" export="true"/>
+		<module name="javax.jms.api" slot="main" export="true"/>
+		<!--module name="pe.com.petroperu.library.gson" slot="main" export="true"/-->
+		<module name="pe.com.petroperu.library.sgocore" slot="main" export="true"/>
+<!--
+		<module name="javax.api" export="true"/>
+		<module name="javax.servlet.api" export="true"/>
+		<module name="javax.servlet.jsp.api" export="true"/>
+		<module name="javax.servlet.jstl.api" export="true"/>
+		<module name="org.jboss.vfs"/>
+-->
+	</dependencies>
+</deployment>
+</jboss-deployment-structure>

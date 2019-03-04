@@ -1,0 +1,13 @@
+*/target/*
+target/
+bin/*
+.metadata
+.classpath
+.settings
+src/main/resources/jdbc.properties
+src/main/webapp/WEB-INF/jdbc.properties
+*/.copyarea.db
+.copyarea.db
+.externalToolBuilders/
+.springBeans
+.project
