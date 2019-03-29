@@ -1,4 +1,4 @@
---inicio agregar tablas==
+--inicio agregar tablas== HT2
 --producto_equivalente
 CREATE SEQUENCE sgo.secuencia_id_producto_equivalencia
     INCREMENT 1
