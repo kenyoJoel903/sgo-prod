@@ -258,7 +258,7 @@ public class NumeracionGecDao {
 		return respuesta;
 	}
 	
-	public RespuestaCompuesta validaRegistro(String aliasOperacion) {
+	public RespuestaCompuesta validaRegistroAlias(String aliasOperacion) {
 		StringBuilder consultaSQL = new StringBuilder();
 		List<NumeracionGec> listaRegistros = new ArrayList<NumeracionGec>();
 		Contenido<NumeracionGec> contenido = new Contenido<NumeracionGec>();
@@ -289,6 +289,54 @@ public class NumeracionGecDao {
 			consultaSQL.append(NOMBRE_VISTA);
 			consultaSQL.append(" t1 ");		
 			consultaSQL.append("WHERE t1.estado = 1 AND lower(t1.alias_operacion) = lower('" + aliasOperacion + "')");
+			
+			listaRegistros = jdbcTemplate.query(consultaSQL.toString(),	parametros.toArray(), new NumeracionGecMapper());
+			contenido.totalRegistros = listaRegistros.size();
+			contenido.totalEncontrados = listaRegistros.size();
+			contenido.carga = listaRegistros;
+			respuesta.mensaje = "OK";
+			respuesta.estado = true;
+			respuesta.contenido = contenido;
+		} catch (DataAccessException excepcionAccesoDatos) {
+			excepcionAccesoDatos.printStackTrace();
+			respuesta.error = Constante.EXCEPCION_ACCESO_DATOS;
+			respuesta.estado = false;
+			respuesta.contenido = null;
+		}
+		return respuesta;
+	}
+	
+	public RespuestaCompuesta validaRegistroIdOperAnio(int idOperacion, int anio) {
+		StringBuilder consultaSQL = new StringBuilder();
+		List<NumeracionGec> listaRegistros = new ArrayList<NumeracionGec>();
+		Contenido<NumeracionGec> contenido = new Contenido<NumeracionGec>();
+		RespuestaCompuesta respuesta = new RespuestaCompuesta();
+		List<Object> parametros = new ArrayList<Object>();
+
+		try {
+
+			consultaSQL.setLength(0);
+			consultaSQL.append("SELECT ");
+			consultaSQL.append("t1.id_configuracion_gec, ");
+			consultaSQL.append("t1.id_operacion, ");
+			consultaSQL.append("t1.correlativo, ");
+			consultaSQL.append("t1.estado, ");
+			consultaSQL.append("t1.anio, ");
+			consultaSQL.append("t1.alias_operacion, ");
+			consultaSQL.append("t1.nombre_operacion, ");
+			consultaSQL.append("t1.nombre_cliente, ");
+			consultaSQL.append("t1.creado_el, ");
+			consultaSQL.append("t1.creado_por, ");
+			consultaSQL.append("t1.actualizado_por, ");
+			consultaSQL.append("t1.actualizado_el, ");
+			consultaSQL.append("t1.ip_creacion, ");
+			consultaSQL.append("t1.ip_actualizacion, ");
+			consultaSQL.append(" t1.usuario_creacion, "); 
+			consultaSQL.append(" t1.usuario_actualizacion ");
+			consultaSQL.append("FROM ");
+			consultaSQL.append(NOMBRE_VISTA);
+			consultaSQL.append(" t1 ");		
+			consultaSQL.append("WHERE t1.estado = 1 AND t1.anio = " + anio + " AND t1.id_operacion = " + idOperacion);
 			
 			listaRegistros = jdbcTemplate.query(consultaSQL.toString(),	parametros.toArray(), new NumeracionGecMapper());
 			contenido.totalRegistros = listaRegistros.size();

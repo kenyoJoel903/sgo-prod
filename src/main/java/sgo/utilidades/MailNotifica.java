@@ -399,7 +399,9 @@ public class MailNotifica extends ObjectMail {
 		this.para = new ArrayList<String>();
 		this.conCopia = new ArrayList<String>();
 		this.cuerpo = "";
-		this.asunto="[SGO-COM] Envío GEC  Nro. " + eGuiaCombustible.getNumeroSerie() + "-" + eGuiaCombustible.getNumeroGEC() + " con estado " + Utilidades.retornaEstadoGEC(eGuiaCombustible.getEstado()) + " enviado por " + parametros.getFiltroUsuario();
+		
+		//Se cambia eGuiaCombustible.getNumeroSerie() + "-" + eGuiaCombustible.getNumeroGEC() por eGuiaCombustible.getNumeracionGec() por req 9000002857
+		this.asunto="[SGO-COM] Envío GEC  Nro. " + eGuiaCombustible.getNumeracionGec() + " con estado " + Utilidades.retornaEstadoGEC(eGuiaCombustible.getEstado()) + " enviado por " + parametros.getFiltroUsuario();
 		
 		//esto para armar el arraylist de los correos PARA
 		if(!parametros.getFiltroMailPara().isEmpty()){
@@ -441,7 +443,9 @@ public class MailNotifica extends ObjectMail {
 		this.para = new ArrayList<String>();
 		this.conCopia = new ArrayList<String>();
 		this.cuerpo = "";
-		this.asunto="[SGO-COM] GEC  Nro. " + eGuiaCombustible.getNumeroSerie() + "-" + eGuiaCombustible.getNumeroGEC() + " emitida pendiente de su Aprobación";
+		
+		//Se cambia eGuiaCombustible.getNumeroSerie() + "-" + eGuiaCombustible.getNumeroGEC() por eGuiaCombustible.getNumeracionGec() por req 9000002857
+		this.asunto="[SGO-COM] GEC  Nro. " + eGuiaCombustible.getNumeracionGec() + " emitida pendiente de su Aprobación";
 		
 		//esto para armar el arraylist de los correos PARA
 		if(!eGuiaCombustible.getOperacion().getCorreoPara().trim().isEmpty()){
@@ -463,7 +467,8 @@ public class MailNotifica extends ObjectMail {
 	
 		cuerpo+= "Sr(es).: " + eGuiaCombustible.getNombreCliente() + " <br/>";
 		cuerpo+= "Estimado Cliente:  <br/>";			
-		cuerpo+= "<br/>Por la presente, le informamos que se ha emitido la GEC N° " + eGuiaCombustible.getNumeroSerie() + "-" + eGuiaCombustible.getNumeroGEC() +", con las caracter"+ I_CON_TINLDE +"sticas siguientes: <br/><br/>";	
+		//Se cambia eGuiaCombustible.getNumeroSerie() + "-" + eGuiaCombustible.getNumeroGEC() por eGuiaCombustible.getNumeracionGec() por req 9000002857
+		cuerpo+= "<br/>Por la presente, le informamos que se ha emitido la GEC N° " + eGuiaCombustible.getNumeracionGec() +", con las caracter"+ I_CON_TINLDE +"sticas siguientes: <br/><br/>";	
 		cuerpo+= "<b>Recepci"+O_CON_TINLDE+"n:</b> Operaci"+O_CON_TINLDE+"n "+ eGuiaCombustible.getNombreOperacion() + ".<br/>";
 		cuerpo+= "<b>Transportista:</b>  "+ eGuiaCombustible.getNombreTransportista() + ".<br/>";
 		cuerpo+= "<b>Fecha de Recepci"+O_CON_TINLDE+"n en Operaci"+O_CON_TINLDE+"n:</b> "+ Utilidades.convierteDateAString(eDetalleGEC.getFechaRecepcion(),"dd/MM/yyyy")  + ".<br/>";
@@ -490,7 +495,9 @@ public class MailNotifica extends ObjectMail {
 		this.para = new ArrayList<String>();
 		this.conCopia = new ArrayList<String>();
 		this.cuerpo = "";
-		this.asunto="[SGO-COM] GEC  Nro. " + eGuiaCombustible.getNumeroSerie() + "-" + eGuiaCombustible.getNumeroGEC() + " aprobada por el Cliente";
+		
+		//Se cambia eGuiaCombustible.getNumeroSerie() + "-" + eGuiaCombustible.getNumeroGEC() por eGuiaCombustible.getNumeracionGec() por req 9000002857
+		this.asunto="[SGO-COM] GEC  Nro. " + eGuiaCombustible.getNumeracionGec() + " aprobada por el Cliente";
 		
 		if(!eGuiaCombustible.getAprobacionGec().getRegistrador().getEmail().isEmpty()){
 			para.add(eGuiaCombustible.getAprobacionGec().getRegistrador().getEmail().trim());
@@ -500,7 +507,8 @@ public class MailNotifica extends ObjectMail {
 		}
 
 		cuerpo+= "Estimados:  <br/>";
-		cuerpo+= "<br/>Por la presente, le notificamos que ha sido aprobada la GEC N° " + eGuiaCombustible.getNumeroSerie() + "-" + eGuiaCombustible.getNumeroGEC() +"; con las caracter"+ I_CON_TINLDE +"sticas siguientes: <br/><br/>";	
+		//Se cambia eGuiaCombustible.getNumeroSerie() + "-" + eGuiaCombustible.getNumeroGEC() por eGuiaCombustible.getNumeracionGec() por req 9000002857
+		cuerpo+= "<br/>Por la presente, le notificamos que ha sido aprobada la GEC N° " + eGuiaCombustible.getNumeracionGec() +"; con las caracter"+ I_CON_TINLDE +"sticas siguientes: <br/><br/>";	
 		cuerpo+= "<b>Cliente:</b> "+ eGuiaCombustible.getNombreCliente() + ".<br/>";
 		cuerpo+= "<b>Usuario que aprob"+O_CON_TINLDE+":</b> "+ parametros.getFiltroUsuario() + ".<br/>";
 		cuerpo+= "<b>Recepci"+O_CON_TINLDE+"n:</b> Operaci"+O_CON_TINLDE+"n "+ eGuiaCombustible.getNombreOperacion() + ".<br/>";
@@ -527,7 +535,9 @@ public class MailNotifica extends ObjectMail {
 		this.para = new ArrayList<String>();
 		this.conCopia = new ArrayList<String>();
 		this.cuerpo = "";
-		this.asunto="[SGO-COM] GEC  Nro. " + eGuiaCombustible.getNumeroSerie() + "-" + eGuiaCombustible.getNumeroGEC() + " rechazada por el Cliente";
+		
+		//Se cambia eGuiaCombustible.getNumeroSerie() + "-" + eGuiaCombustible.getNumeroGEC() por eGuiaCombustible.getNumeracionGec() por req 9000002857
+		this.asunto="[SGO-COM] GEC  Nro. " + eGuiaCombustible.getNumeracionGec() + " rechazada por el Cliente";
 		
 		if(!eGuiaCombustible.getAprobacionGec().getRegistrador().getEmail().isEmpty()){
 			para.add(eGuiaCombustible.getAprobacionGec().getRegistrador().getEmail().trim());
@@ -537,7 +547,9 @@ public class MailNotifica extends ObjectMail {
 		}
 		
 		cuerpo+= "Estimados:  <br/>";
-		cuerpo+= "<br/>Por la presente, le notificamos que ha sido rechazada la GEC N° " + eGuiaCombustible.getNumeroSerie() + "-" + eGuiaCombustible.getNumeroGEC() +"; con las caracter"+ I_CON_TINLDE +"sticas siguientes: <br/><br/>";	
+		
+		//Se cambia eGuiaCombustible.getNumeroSerie() + "-" + eGuiaCombustible.getNumeroGEC() por eGuiaCombustible.getNumeracionGec() por req 9000002857
+		cuerpo+= "<br/>Por la presente, le notificamos que ha sido rechazada la GEC N° " + eGuiaCombustible.getNumeracionGec() +"; con las caracter"+ I_CON_TINLDE +"sticas siguientes: <br/><br/>";	
 		cuerpo+= "<b>Cliente:</b> "+ eGuiaCombustible.getNombreCliente() + ".<br/>";
 		cuerpo+= "<b>Usuario que rechaz"+O_CON_TINLDE+":</b> "+ parametros.getFiltroUsuario() + ".<br/>";
 		cuerpo+= "<b>Recepci"+O_CON_TINLDE+"n:</b> Operaci"+O_CON_TINLDE+"n "+ eGuiaCombustible.getNombreOperacion() + ".<br/>";

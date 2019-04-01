@@ -90,7 +90,7 @@
 							</div>	
 							<div class="form-group">
 								<label  class="control-label">Número</label> 
-								<input name="cmpNumero" id="cmpNumero" type="text" class="form-control text-uppercase input-sm" maxlength="5" required placeholder="Número" />
+								<input name="cmpNumero" id="cmpNumero" type="text" class="form-control text-uppercase input-sm" maxlength="5" required placeholder="Número" value="0" />
 							</div>	
 						</form>
 					</div>

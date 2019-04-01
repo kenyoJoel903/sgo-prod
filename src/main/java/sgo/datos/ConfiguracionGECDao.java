@@ -41,7 +41,7 @@ public class ConfiguracionGECDao {
 		return this.jdbcTemplate.getDataSource();
 	}
 	
-	public RespuestaCompuesta recuperarConfigPorIdOperacion(int idOperacion){
+	public RespuestaCompuesta recuperarConfigPorIdOperacion(int idOperacion, int anio){
 		
 		ConfiguracionGec eConfigGec = null;
 		
@@ -53,9 +53,9 @@ public class ConfiguracionGECDao {
 		
 		try{
 			
-			consultaSQL.append("SELECT id_configuracion_gec, id_operacion, correlativo, numero_serie "  );
+			consultaSQL.append("SELECT id_configuracion_gec, id_operacion, right('0000'|| (cast(correlativo as integer) + 1), 4) as correlativo, numero_serie, anio, alias_operacion "  );
 			consultaSQL.append("FROM " + NOMBRE_TABLA );
-			consultaSQL.append(" WHERE estado = 1 AND id_operacion = " + idOperacion);
+			consultaSQL.append(" WHERE estado = 1 AND id_operacion = " + idOperacion + " AND anio = " + anio);
 			
 			List<Map<String,Object>> mapRegistros= jdbcTemplate.queryForList(consultaSQL.toString(),new Object[]{});
 			
@@ -70,6 +70,8 @@ public class ConfiguracionGECDao {
 					eConfigGec.setIdOperacion((Integer) map.get("id_operacion"));
 					eConfigGec.setCorrelativo((String) map.get("correlativo"));
 					eConfigGec.setNumeroSerie((String) map.get("numero_serie"));
+					eConfigGec.setAliasOperacion((String) map.get("alias_operacion"));
+					eConfigGec.setAnio((Integer) map.get("anio"));
 				}
 			}
 
@@ -99,7 +101,7 @@ public class ConfiguracionGECDao {
 		try {
 			consultaSQL.append("INSERT INTO ");
 			consultaSQL.append(NOMBRE_TABLA);
-			consultaSQL.append(" (id_operacion, correlativo, numero_serie, estado) ");
+			consultaSQL.append(" (id_operacion, correlativo, numero_serie, estado, anio, alias_operacion) ");
 
 			consultaSQL.append(" VALUES (:idOperacion,:correlativo,:nroSerie,:estado)");
 		
@@ -107,7 +109,9 @@ public class ConfiguracionGECDao {
 			listaParametros.addValue("idOperacion", confGec.getIdOperacion());
 			listaParametros.addValue("correlativo", confGec.getCorrelativo());
 			listaParametros.addValue("nroSerie", confGec.getNumeroSerie());
-			listaParametros.addValue("estado", confGec.getEstado());			
+			listaParametros.addValue("estado", confGec.getEstado());	
+			listaParametros.addValue("aliasOperacion", confGec.getAliasOperacion());
+			listaParametros.addValue("anio", confGec.getAnio());			
 			
 			SqlParameterSource namedParameters= listaParametros;
 			/*Ejecuta la consulta y retorna las filas afectadas*/

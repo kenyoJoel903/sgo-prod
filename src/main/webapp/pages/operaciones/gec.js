@@ -17,7 +17,10 @@ $(document).ready(function(){
   moduloActual.ordenGrilla=[[ 2, 'asc' ]];
   //Agregar columnas a la grilla
   moduloActual.columnasGrilla.push({ "data": 'id'}); 
-  moduloActual.columnasGrilla.push({ "data": 'numeroGuia'});
+  
+  //se cambia numeroGuia por numeracion_gec por req 9000002857
+  moduloActual.columnasGrilla.push({ "data": 'numeracionGec'});
+  
   moduloActual.columnasGrilla.push({ "data": 'fechaGuiaCombustible'});
   moduloActual.columnasGrilla.push({ "data": 'nombreOperacion'});
   moduloActual.columnasGrilla.push({ "data": 'totalVolumenDespachado'});
@@ -576,7 +579,12 @@ $(document).ready(function(){
 	var referenciaModulo=this;
 	var estadoRegistro = referenciaModulo.obj.datClienteApi.cell(indice,7).data();
 	referenciaModulo.estadoRegistro=estadoRegistro;	 
-	//referenciaModulo.obj.cmpNumeroGuia = referenciaModulo.obj.datClienteApi.cell(indice,2).data();
+	
+	console.log('indice: ' + indice);
+	//se descomenta por req 9000002857
+	referenciaModulo.obj.cmpNumeroGuia = referenciaModulo.obj.datClienteApi.cell(indice,2).data();
+	
+	
 	referenciaModulo.obj.cmpEstadoGuia = referenciaModulo.obj.datClienteApi.cell(indice,7).data();	 
   };
   moduloActual.listarGuiasRemisionDisponibles= function(){  
@@ -1017,7 +1025,13 @@ $(document).ready(function(){
 			ref.obj.cntFormulario.show();
 			ref.obj.ocultaContenedorFormulario.hide();
 			ref.actualizarBandaInformacion(constantes.TIPO_MENSAJE_INFO,cadenas.INICIAR_OPERACION);
-			var numeroGuiaGec=registro.numeroSerie+"-" + registro.numeroGEC;
+			
+			//Se comenta por req 9000002857
+//			var numeroGuiaGec=registro.numeroSerie+"-" + registro.numeroGEC;
+			//Inicio Se agrega por req 9000002857
+			var numeroGuiaGec = registro.numeroGEC;
+			//Fin Se agrega por req 9000002857
+			
 			var ClienteOperacion = $('#cmpFiltroOperacion option:selected').text();
 			var idCliente = $('#cmpFiltroOperacion option:selected').attr("data-id-cliente");
 			var idOperacion = $('#cmpFiltroOperacion option:selected').val();
@@ -1027,6 +1041,7 @@ $(document).ready(function(){
 			ref.obj.cmpNumeroGuia.val(numeroGuiaGec);
 			ref.obj.cmpNumeroGuia.attr("data-numero-serie",registro.numeroSerie);
 			ref.obj.cmpNumeroGuia.attr("data-numero-guia",registro.numeroGEC);
+			
 			ref.obj.cmpNumeroContrato.val(registro.numeroContrato);
 			ref.obj.cmpDescripcionContrato.val(registro.descripcionContrato);
 		} catch(error){
@@ -1045,7 +1060,13 @@ $(document).ready(function(){
 		ref.obj.cmpClienteOperacion.attr("data-id-cliente",registro.idCliente);
 		ref.obj.cmpClienteOperacion.attr("data-id-operacion",registro.idOperacion);
 		
-		ref.obj.cmpNumeroGuia.val(registro.numeroSerie+"-"+registro.numeroGEC);
+		//Se comenta por req 9000002857
+//		ref.obj.cmpNumeroGuia.val(registro.numeroSerie+"-"+registro.numeroGEC);
+		
+		//inicio Se agrega por req 9000002857
+		ref.obj.cmpNumeroGuia.val(registro.numeracionGec);
+		//fin Se agrega por req 9000002857
+		
 		ref.obj.cmpNumeroGuia.attr("data-numero-serie",registro.numeroSerie);
 		ref.obj.cmpNumeroGuia.attr("data-numero-guia",registro.numeroGEC);
 		
@@ -1142,7 +1163,14 @@ $(document).ready(function(){
 	    this.obj.vistaId.text(registro.id);
 	    this.obj.vistaClienteOperacion.text(ClienteOperacion);
 	    //this.obj.vistaClienteOperacion.text(referenciaModulo.obj.cmpFiltroOperacion.val());
-	    this.obj.vistaNumeroGuia.text(registro.numeroSerie+"-"+registro.numeroGEC);
+	    
+	  //Comentado por req 9000002857
+//	    this.obj.vistaNumeroGuia.text(registro.numeroSerie+"-"+registro.numeroGEC);
+	    
+	    //Inicio agregado por req 9000002857
+	    this.obj.vistaNumeroGuia.text(registro.numeracionGec);
+	    //Fin agregado por req 9000002857
+	    
 	    this.obj.vistaNumeroContrato.text(registro.numeroContrato);
 	    this.obj.vistaDescripcionContrato.text(registro.descripcionContrato);
 	    this.obj.vistaOrdenCompra.text(registro.ordenCompra);
@@ -1233,7 +1261,9 @@ $(document).ready(function(){
 		var ClienteOperacion = registro.nombreCliente +'/'+registro.nombreOperacion;
 		this.obj.aprobacionId.text(registro.id);
 		this.obj.aprobacionClienteOperacion.text(ClienteOperacion);
-		this.obj.aprobacionNumeroGuia.text(registro.numeroSerie+"-"+registro.numeroGEC);
+		
+		//se cambia registro.numeroSerie+"-"+registro.numeroGEC por registro.numeracionGec por req 9000002857
+		this.obj.aprobacionNumeroGuia.text(registro.numeracionGec);
 		this.obj.aprobacionOrdenCompra.text(registro.ordenCompra); 
 		this.obj.aprobacionProducto.text(registro.nombreProducto);
 		this.obj.aprobacionTransportista.text(registro.nombreTransportista);
@@ -1441,6 +1471,11 @@ $(document).ready(function(){
 	    eRegistro.idCliente =ref.obj.cmpClienteOperacion.attr("data-id-cliente");	    
 	    eRegistro.numeroSerie = ref.obj.cmpNumeroGuia.attr("data-numero-serie");
 	    eRegistro.numeroGEC = ref.obj.cmpNumeroGuia.attr("data-numero-guia");
+	    
+	    //Inicio se agrega por req 9000002857
+	    eRegistro.numeracionGec = ref.obj.cmpNumeroGuia.val();
+	    //Fin se agrega por req 9000002857
+	    
 	    eRegistro.comentarios = ref.obj.cmpComentarios.val();
 	    eRegistro.numeroContrato = ref.obj.cmpNumeroContrato.val().toUpperCase();
 	    eRegistro.descripcionContrato = ref.obj.cmpDescripcionContrato.val();

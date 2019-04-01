@@ -738,7 +738,8 @@ class DashedLine implements LineDash {
 	   celdaTabla.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
 	   tablaCuerpo.addCell(celdaTabla);
 	   
-	   frase = new Phrase("N° " + Guia.getNumeroGuia(), fuenteTituloPrincipal);
+	   //Se cambia Guia.getNumeroGuia por Guia.getNumeracionGec
+	   frase = new Phrase("N° " + Guia.getNumeracionGec(), fuenteTituloPrincipal);
 	   celdaTabla = new PdfPCell(frase);
 	   celdaTabla.setPadding(4);
 	   celdaTabla.setBorder(PdfPCell.NO_BORDER);

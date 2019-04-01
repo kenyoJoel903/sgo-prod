@@ -11,6 +11,28 @@ public class ConfiguracionGec {
 	private String numeroSerie;
 	
 	private Integer estado;
+	
+	//Inicio Agregado por req 9000002857
+	private int anio;
+	private String alias_operacion;
+
+	public int getAnio() {
+		return anio;
+	}
+
+	public void setAnio(int anio) {
+		this.anio = anio;
+	}
+
+	public String getAliasOperacion() {
+		return alias_operacion;
+	}
+
+	public void setAliasOperacion(String alias_operacion) {
+		this.alias_operacion = alias_operacion;
+	}
+	
+	//Fin Agregado por req 9000002857
 
 	public int getIdOperacion() {
 		return idOperacion;

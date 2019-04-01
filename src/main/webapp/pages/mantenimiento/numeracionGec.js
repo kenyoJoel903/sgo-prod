@@ -59,15 +59,23 @@ $(document).ready(function(){
 	
 	moduloActual.resetearFormulario = function(){
 		
-		console.log('resetearFormulario');
+		console.log('resetearFormularioo');
 		
 		var referenciaModulo=this;
 		referenciaModulo.obj.frmPrincipal[0].reset();
 		
-		moduloActual.obj.cmbOperacion.val(0);
+		moduloActual.obj.cmbOperacion.empty();
+		
+		$('#cmbOperacion').on("change",function(){
+			console.log('entro')
+			console.log($('#cmbOperacion option:selected').text().trim());
+			
+			moduloActual.obj.cmpAlias.val($('#cmbOperacion option:selected').text().trim().substring(0, 3));
+		});
+		
 	    moduloActual.obj.cmpAlias.val('');
 	    moduloActual.obj.cmpAnio.val('');
-	    moduloActual.obj.cmpNumero.val('');
+	    moduloActual.obj.cmpNumero.val('0');
 	    
 	    this.obj.cmbOperacion.prop('disabled', false);
 	    this.obj.cmpAnio.prop('disabled', false);
@@ -179,7 +187,7 @@ $(document).ready(function(){
 			
 			var anio = $("#cmpAnio").val();
 			
-			if(anio == '') return "El añio es un dato obligatorio";
+			if(anio == '') return "El año es un dato obligatorio";
 
 			var numero = $("#cmpNumero").val();
 			
@@ -226,7 +234,7 @@ $(document).ready(function(){
 		 
 		 var elemento2 =constantes.PLANTILLA_OPCION_SELECTBOX;
  	     elemento2 = elemento2.replace(constantes.ID_OPCION_CONTENEDOR, idOperacion);
- 	     elemento2 = elemento2.replace(constantes.VALOR_OPCION_CONTENEDOR, registro.nombreOperacion);
+ 	     elemento2 = elemento2.replace(constantes.VALOR_OPCION_CONTENEDOR, registro.nombreOperacion); 	    
  	     this.obj.cmbOperacion.empty().append(elemento2).val(idOperacion).trigger('change');
 	     $('#cmbOperacion').find("option:selected").val(idOperacion);
 	     $('#cmbOperacion').val(idOperacion);

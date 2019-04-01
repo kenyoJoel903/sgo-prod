@@ -3,6 +3,7 @@ package sgo.servicio;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -244,8 +245,8 @@ public class NumeracionGecControlador {
 			   eNumeracionGec.setIpActualizacion(direccionIp);
 			   eNumeracionGec.setIpCreacion(direccionIp);
 			   
-			   //Valido primero si no hay otro registro igual en BD
-			   respuesta = dNumeracionGec.validaRegistro(eNumeracionGec.getAliasOperacion());
+			   //Valido primero si no hay otro registro con el mismo alias
+			   respuesta = dNumeracionGec.validaRegistroAlias(eNumeracionGec.getAliasOperacion());
 			   
 			   // Verifica si la accion se ejecuto de forma satisfactoria
 			   if (respuesta.estado == false) {
@@ -254,7 +255,20 @@ public class NumeracionGecControlador {
 			   
 			   //Si existe el registro valido que no se encuentre activo y que no se encuentre duplicado
 			   if(respuesta.getContenido().getCarga().size() > 0){
-				   throw new Exception(gestorDiccionario.getMessage("sgo.numeracionGecActivo", null, locale));
+				   throw new Exception("Ya existe una numeración gec con el alias ingresado");
+			   }
+			   
+			   //Valido segundo si no hay otro registro con misma operacion y año en BD
+			   respuesta = dNumeracionGec.validaRegistroIdOperAnio(eNumeracionGec.getIdOperacion(), eNumeracionGec.getAnio());
+			   
+			   // Verifica si la accion se ejecuto de forma satisfactoria
+			   if (respuesta.estado == false) {
+			    throw new Exception(gestorDiccionario.getMessage("sgo.guardarFallido", null, locale));
+			   }
+			   
+			   //Si existe el registro valido que no se encuentre activo y que no se encuentre duplicado
+			   if(respuesta.getContenido().getCarga().size() > 0){
+				   throw new Exception("Ya existe una numeración gec con la misma operación y año ingresado");
 			   }
 			   
 			   respuesta = dNumeracionGec.guardarRegistro(eNumeracionGec);
@@ -364,25 +378,6 @@ public class NumeracionGecControlador {
 			    direccionIp = peticionHttp.getRemoteAddr();
 			   }
 			   
-			   if(eNumeracionGec.getEstado() == NumeracionGec.ESTADO_ACTIVO){
-				   //Valido primero si no hay otro registro igual en BD
-				   respuesta = dNumeracionGec.validaRegistro(eNumeracionGec.getAliasOperacion());
-				   
-				   // Verifica si la accion se ejecuto de forma satisfactoria
-				   if (respuesta.estado == false) {
-				    throw new Exception(gestorDiccionario.getMessage("sgo.guardarFallido", null, locale));
-				   }
-				   
-				   //Si existe el registro valido que no se encuentre activo y que no se encuentre duplicado
-				   if(respuesta.getContenido().getCarga().size() > 0){
-					   NumeracionGec ePer = (NumeracionGec) respuesta.getContenido().getCarga().get(0);
-					   if(ePer.getId() != eNumeracionGec.getId()){
-						   throw new Exception(gestorDiccionario.getMessage("sgo.numeracionGecActivo", null, locale));
-					   }
-				   }
-			   }
-
-			   
 			   eNumeracionGec.setActualizadoEl(Calendar.getInstance().getTime().getTime());
 			   eNumeracionGec.setActualizadoPor(principal.getID());
 			   eNumeracionGec.setIpActualizacion(direccionIp);
@@ -457,6 +452,26 @@ public class NumeracionGecControlador {
 			   direccionIp = peticionHttp.getHeader("X-FORWARDED-FOR");
 			   if (direccionIp == null) {
 			    direccionIp = peticionHttp.getRemoteAddr();
+			   }
+			   
+			   //Valido primero si no hay otro registro igual en BD
+			   respuesta = dNumeracionGec.validaRegistroAlias(eNumeracionGec.getAliasOperacion());
+			   
+			   // Verifica si la accion se ejecuto de forma satisfactoria
+			   if (respuesta.estado == false) {
+			    throw new Exception(gestorDiccionario.getMessage("sgo.guardarFallido", null, locale));
+			   }
+			   
+			   //Si existe el registro valido que no se encuentre activo y que no se encuentre duplicado
+			   if(respuesta.getContenido().getCarga().size() > 0){
+				   
+				   List<NumeracionGec> lstTemp = (List<NumeracionGec>) respuesta.getContenido().getCarga();
+				   
+				   for(NumeracionGec eNum : lstTemp){
+					   if(eNum.getId() != eNumeracionGec.getId()){
+						   throw new Exception("Ya existe una numeración gec con el alias ingresado");
+					   }
+				   }
 			   }
 			   
 			   eNumeracionGec.setActualizadoEl(Calendar.getInstance().getTime().getTime());

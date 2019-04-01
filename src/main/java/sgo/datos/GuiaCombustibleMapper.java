@@ -23,6 +23,12 @@ public class GuiaCombustibleMapper implements RowMapper<GuiaCombustible>{
       eGuiaCombustible.setIdProducto(rs.getInt("id_producto"));
       eGuiaCombustible.setIdCliente(rs.getInt("cliente"));
       eGuiaCombustible.setIdOperacion(rs.getInt("operacion"));
+      
+      //Inicio Agregado por req 9000002857
+      eGuiaCombustible.setAnio(rs.getInt("anio"));
+      eGuiaCombustible.setNumeracionGec(rs.getString("numeracion_gec"));;
+    //Fin Agregado por req 9000002857
+      
       eGuiaCombustible.setNumeroSerie(Utilidades.cleanXSS(rs.getString("serie_gec")));
       eGuiaCombustible.setNombreOperacion(Utilidades.cleanXSS(rs.getString("nombre_operacion")));
       eGuiaCombustible.setNombreCliente(Utilidades.cleanXSS(rs.getString("nombre_cliente")));

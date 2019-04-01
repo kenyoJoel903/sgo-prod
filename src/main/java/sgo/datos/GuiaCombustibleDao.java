@@ -150,6 +150,12 @@ public class GuiaCombustibleDao {
 	      consultaSQL.append("t1.nombre_transportista,");
 	      consultaSQL.append("t1.total_volumen_despachado,");
 	      consultaSQL.append("t1.total_volumen_recibido,");
+	      
+	      //Inicio Agregado por req 9000002857
+	      consultaSQL.append("t1.anio,");
+	      consultaSQL.append("t1.numeracion_gec,");
+	    //Fin Agregado por req 9000002857
+	      
 			//Campos de auditoria
 			consultaSQL.append("t1.creado_el,");
 			consultaSQL.append("t1.creado_por,");
@@ -163,7 +169,9 @@ public class GuiaCombustibleDao {
 			consultaSQL.append(NOMBRE_VISTA);
 			consultaSQL.append(" t1 ");
 			consultaSQL.append(sqlWhere);
-			consultaSQL.append(" ORDER BY CAST(serie_gec AS INTEGER)  desc, CAST(numero_gec AS INTEGER) desc ");
+			
+			//Se quita orden por CAST(serie_gec AS INTEGER)  desc, CAST(numero_gec AS INTEGER) desc  y ahora se ordena por t1.numeracion_gec por req 9000002857
+			consultaSQL.append(" ORDER BY t1.numeracion_gec ");
 //			consultaSQL.append(" ORDER BY t1.fecha_guia_combustible desc ");
 			consultaSQL.append(sqlLimit);
 			//System.out.println(consultaSQL.toString());
@@ -217,6 +225,12 @@ public class GuiaCombustibleDao {
 	      consultaSQL.append("t1.nombre_transportista,");
 	      consultaSQL.append("t1.total_volumen_despachado,");
 	      consultaSQL.append("t1.total_volumen_recibido,");
+	      
+	      //Inicio Agregado por req 9000002857
+	      consultaSQL.append("t1.anio,");
+	      consultaSQL.append("t1.numeracion_gec,");
+	    //Fin Agregado por req 9000002857
+	      
 	      //Campos de auditoria
 				consultaSQL.append("t1.creado_el,");
 				consultaSQL.append("t1.creado_por,");
@@ -248,7 +262,7 @@ public class GuiaCombustibleDao {
 			return respuesta;
 		}
 	
-	 public RespuestaCompuesta recuperarNumeroGec(int idCliente, int idOperacion){
+	 public RespuestaCompuesta recuperarNumeroGec(int idCliente, int idOperacion, int anioActual){
     StringBuilder consultaSQL= new StringBuilder();   
     List<GuiaCombustible> listaRegistros=new ArrayList<GuiaCombustible>();
     Contenido<GuiaCombustible> contenido = new Contenido<GuiaCombustible>();
@@ -262,9 +276,10 @@ public class GuiaCombustibleDao {
       consultaSQL.append("t1.id_transportista,");
       
       //cambio por requerimiento 9000002967 GEC============
-//      consultaSQL.append("t1.numero_gec,");
-      consultaSQL.append("COALESCE((select correlativo from sgo.configuracion_gec where id_operacion = " + idOperacion + " and estado = 1),'000') numero_gec,");
-      //cambio por requerimiento 9000002967 GEC=============
+//    consultaSQL.append("t1.numero_gec,");
+    //Se cambio los campos del select (alias_operacion || '-' || right('0000'||cast(correlativo as text),4) || '-' || anio ) y al where anio = anioActual por req 9000002857
+    consultaSQL.append("COALESCE((select alias_operacion || '-' || right('0000'|| (cast(correlativo as integer) + 1), 4) || '-' || anio from sgo.configuracion_gec where anio =" + anioActual + " and id_operacion = " + idOperacion + " and estado = 1),'000') numero_gec,");
+    //cambio por requerimiento 9000002967 GEC=============
       
       consultaSQL.append("t1.numero_contrato,");
       consultaSQL.append("t1.descripcion_contrato,");
@@ -286,6 +301,12 @@ public class GuiaCombustibleDao {
       consultaSQL.append("t1.nombre_transportista,");
       consultaSQL.append("t1.total_volumen_despachado,");
       consultaSQL.append("t1.total_volumen_recibido,");
+      
+      //Inicio Agregado por req 9000002857
+      consultaSQL.append("t1.anio,");
+      consultaSQL.append("t1.numeracion_gec,");
+    //Fin Agregado por req 9000002857
+      
       //Campos de auditoria
       consultaSQL.append("t1.creado_el,");
       consultaSQL.append("t1.creado_por,");
@@ -300,7 +321,8 @@ public class GuiaCombustibleDao {
       consultaSQL.append(" t1 ");
       consultaSQL.append(" WHERE cliente");
       consultaSQL.append("=?");
-      consultaSQL.append(" order by CAST(serie_gec AS INTEGER)  desc, CAST(numero_gec AS INTEGER) desc LIMIT 1;");
+		//Se quita orden por CAST(serie_gec AS INTEGER)  desc, CAST(numero_gec AS INTEGER) desc  y ahora se ordena por t1.numeracion_gec por req 9000002857
+      consultaSQL.append(" order by t1.numeracion_gec desc LIMIT 1;");
       listaRegistros= jdbcTemplate.query(consultaSQL.toString(),new Object[] {idCliente},new GuiaCombustibleMapper());
       contenido.totalRegistros=listaRegistros.size();
       contenido.totalEncontrados=listaRegistros.size();
@@ -326,8 +348,9 @@ public class GuiaCombustibleDao {
 		try {
 			consultaSQL.append("INSERT INTO ");
 			consultaSQL.append(NOMBRE_TABLA);
-			consultaSQL.append(" (total_volumen_despachado,total_volumen_recibido,serie_gec,operacion,cliente,orden_compra,fecha_guia_combustible,id_transportista,numero_gec,numero_contrato,descripcion_contrato,estado,comentarios,creado_el,creado_por,actualizado_por,actualizado_el,ip_creacion,ip_actualizacion,id_producto) ");
-			consultaSQL.append(" VALUES (:TotalVolumenDespachado,:TotalVolumenRecibido,:Serie,:Operacion,:Cliente,:OrdenCompra,:FechaGuiaCombustible,:IdTransportista,:NumeroGEC,:NumeroContrato,:DescripcionContrato,:Estado,:Comentarios,:CreadoEl,:CreadoPor,:ActualizadoPor,:ActualizadoEl,:IpCreacion,:IpActualizacion,:IdProducto) ");
+			//Se agrega anio y numeracion_gec por req 9000002857
+			consultaSQL.append(" (anio, numeracion_gec, total_volumen_despachado,total_volumen_recibido,serie_gec,operacion,cliente,orden_compra,fecha_guia_combustible,id_transportista,numero_gec,numero_contrato,descripcion_contrato,estado,comentarios,creado_el,creado_por,actualizado_por,actualizado_el,ip_creacion,ip_actualizacion,id_producto) ");
+			consultaSQL.append(" VALUES (:Anio, :NumeracionGec, :TotalVolumenDespachado,:TotalVolumenRecibido,:Serie,:Operacion,:Cliente,:OrdenCompra,:FechaGuiaCombustible,:IdTransportista,:NumeroGEC,:NumeroContrato,:DescripcionContrato,:Estado,:Comentarios,:CreadoEl,:CreadoPor,:ActualizadoPor,:ActualizadoEl,:IpCreacion,:IpActualizacion,:IdProducto) ");
 			MapSqlParameterSource listaParametros= new MapSqlParameterSource();
 			listaParametros.addValue("Serie", guia_combustible.getNumeroSerie());
 			listaParametros.addValue("Operacion", guia_combustible.getIdOperacion());
@@ -342,6 +365,12 @@ public class GuiaCombustibleDao {
 			listaParametros.addValue("Comentarios", guia_combustible.getComentarios());
 	     listaParametros.addValue("TotalVolumenDespachado", guia_combustible.getTotalVolumenDespachado());
 	      listaParametros.addValue("TotalVolumenRecibido", guia_combustible.getTotalVolumenRecibido());
+	      
+//	      Inicio se agrega por req 9000002857
+	      listaParametros.addValue("Anio", guia_combustible.getAnio());
+	      listaParametros.addValue("NumeracionGec", guia_combustible.getNumeracionGec());
+//	      Fin se agrega por req 9000002857
+	      
 			listaParametros.addValue("CreadoEl", guia_combustible.getCreadoEl());
 			listaParametros.addValue("CreadoPor", guia_combustible.getCreadoPor());
 			listaParametros.addValue("ActualizadoPor", guia_combustible.getActualizadoPor());

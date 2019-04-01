@@ -36,6 +36,28 @@ public class GuiaCombustible extends EntidadBase {
   private Cliente cliente;
   private Operacion operacion;
   
+  //Inicio Agregado por req 9000002857
+  private int anio;
+  private String numeracion_gec;
+  
+  	public int getAnio() {
+	return anio;
+	}
+	
+	public void setAnio(int anio) {
+		this.anio = anio;
+	}
+	
+	public String getNumeracionGec() {
+		return numeracion_gec;
+	}
+	
+	public void setNumeracionGec(String numeracion_gec) {
+		this.numeracion_gec = numeracion_gec;
+	}
+
+//Fin Agregado por req 9000002857
+  
   //variables para hacer las validaciones
   static final int MAXIMA_LONGITUD_ORDEN_COMPRA=20;
   static final int MAXIMA_LONGITUD_COMENTARIO=500;

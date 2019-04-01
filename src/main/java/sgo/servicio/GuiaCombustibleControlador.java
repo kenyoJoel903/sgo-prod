@@ -508,37 +508,34 @@ public class GuiaCombustibleControlador {
       if (!principal.getRol().searchPermiso(eEnlace.getPermiso())){
           throw new Exception(gestorDiccionario.getMessage("sgo.faltaPermiso",null,locale));
       }
-      //Recuperar el registro
-      respuesta = dGuiaCombustible.recuperarNumeroGec(ID, ID_OPER);
+
+      //Inicio Agregado por req 9000002857
+      
+      respuesta = dConfiguracionGec.recuperarConfigPorIdOperacion(ID_OPER, Calendar.getInstance().get(Calendar.YEAR)); 
       if (respuesta.estado==false){         
-       throw new Exception(gestorDiccionario.getMessage("sgo.recuperarFallido",null,locale));
-      }      
-      if (respuesta.contenido.carga.size()==0){
-       numeroGuia=1;
-       
-       //cambio por requerimiento 9000002967 GEC============
-//       numeroSerie = 1
-       numeroSerie= dConfiguracionGec.recuperarMaxNroSerie();
-       //cambio por requerimiento 9000002967 GEC============
-       numeroGuiaCadena=StringUtils.repeat("0", numeroCaracteresGuia) + numeroGuia;
-       numeroSerieCadena = StringUtils.repeat("0", numeroCaracteresSerie) + numeroSerie;
-       guia.setNumeroGEC(numeroGuiaCadena.substring(1));
-       guia.setNumeroSerie(numeroSerieCadena.substring(1));
-      } else {
-       guia =  (GuiaCombustible) respuesta.contenido.carga.get(0);
-       numeroGuia = Integer.parseInt(guia.getNumeroGEC()) ;
-       numeroSerie = Integer.parseInt(guia.getNumeroSerie());
-       numeroGuia ++;
-       if (numeroGuia >= limiteGuia){
-        numeroSerie++;
-        numeroGuia=1;
-       }
-       numeroGuiaCadena=StringUtils.repeat("0", numeroCaracteresGuia) + numeroGuia;
-       numeroSerieCadena = StringUtils.repeat("0", numeroCaracteresSerie) + numeroSerie;
-       guia.setNumeroGEC(numeroGuiaCadena.substring(1));
-       guia.setNumeroSerie(numeroSerieCadena.substring(1));
-      }      
-      //
+          throw new Exception(gestorDiccionario.getMessage("sgo.recuperarFallido",null,locale));
+      }
+      
+      ConfiguracionGec confGec = (ConfiguracionGec) respuesta.contenido.carga.get(0);
+      
+      if(confGec == null){
+    	  
+    	  respuesta = dOperacion.recuperarRegistro(ID_OPER);
+          Operacion oper = (Operacion) respuesta.contenido.carga.get(0);
+          String numeracionGec = oper.getNombre().substring(0, 3) + "-" + "0001" + "-" + Calendar.getInstance().get(Calendar.YEAR);
+          guia.setNumeroGEC(numeracionGec);
+          
+          guia.setNumeroSerie("00");
+    	  
+      }else{    	  
+    	  
+    	  guia.setNumeroSerie(confGec.getNumeroSerie());
+    	  guia.setNumeroGEC(confGec.getAliasOperacion() + "-" + confGec.getCorrelativo() + "-"+ confGec.getAnio());
+    	  
+      }
+      
+      //Fin Agregado por req 9000002857
+      
       respuesta = dCliente.recuperarRegistro(ID);
       if (respuesta.estado==false){         
        throw new Exception(gestorDiccionario.getMessage("sgo.recuperarFallido",null,locale));
@@ -595,6 +592,10 @@ public class GuiaCombustibleControlador {
       if (direccionIp == null) {  
         direccionIp = peticionHttp.getRemoteAddr();  
       }
+		//Inicio agregado por req 9000002857
+		eGuiaCombustible.setAnio(Calendar.getInstance().get(Calendar.YEAR));
+      //Fin agregado por req 9000002857
+		
           eGuiaCombustible.setActualizadoEl(Calendar.getInstance().getTime().getTime());
             eGuiaCombustible.setActualizadoPor(principal.getID()); 
             eGuiaCombustible.setCreadoEl(Calendar.getInstance().getTime().getTime());
@@ -643,18 +644,28 @@ public class GuiaCombustibleControlador {
             }         
             
             //cambio por requerimiento 9000002967 GEC============
-            respuesta = dConfiguracionGec.recuperarConfigPorIdOperacion(eGuiaCombustible.getIdOperacion());
+            respuesta = dConfiguracionGec.recuperarConfigPorIdOperacion(eGuiaCombustible.getIdOperacion(), Calendar.getInstance().get(Calendar.YEAR)); //se agrega Calendar.getInstance().get(Calendar.YEAR) por req 9000002857
             if (respuesta.estado==false){         
                 throw new Exception(gestorDiccionario.getMessage("sgo.recuperarFallido",null,locale));
             }
             
             ConfiguracionGec confGec = (ConfiguracionGec) respuesta.contenido.carga.get(0);
             
+            //Inicio Agregado por req 9000002857
+            String numeracionGec = eGuiaCombustible.getNumeracionGec();
+            
+            String temp[] = numeracionGec.split("-");
+            
+            Integer correlativo = Integer.parseInt(temp[1]);	//para quitar los ceros de la izquierda
+            //Fin Agregado por req 9000002857
+            
             if(confGec == null){
 
             	confGec = new ConfiguracionGec();
             	confGec.setIdOperacion(eGuiaCombustible.getIdOperacion());
-            	confGec.setCorrelativo(eGuiaCombustible.getNumeroGEC());
+            	confGec.setCorrelativo(correlativo.toString());		// se cambia eGuiaCombustible.getNumeroGec por correlativo.toString() por req 9000002857
+            	confGec.setAliasOperacion(temp[0]);		//se agrega por req 9000002857
+            	confGec.setAnio(Integer.parseInt(temp[2]));	//se agrega por req 9000002857
             	confGec.setNumeroSerie(eGuiaCombustible.getNumeroSerie());
             	confGec.setEstado(1);
             	
@@ -664,7 +675,7 @@ public class GuiaCombustibleControlador {
                 }
             }else{
 
-          	  confGec.setCorrelativo(eGuiaCombustible.getNumeroGEC());
+          	  confGec.setCorrelativo(correlativo.toString());	// se cambia eGuiaCombustible.getNumeroGec por correlativo.toString() por req 9000002857
           	  confGec.setNumeroSerie(eGuiaCombustible.getNumeroSerie());
 
           	  respuesta = dConfiguracionGec.actualizarRegistro(confGec);
@@ -1089,6 +1100,14 @@ public class GuiaCombustibleControlador {
     }
     GuiaCombustible eGuiaCombustible = (GuiaCombustible)  oRespuesta.contenido.getCarga().get(0);
     
+    //Esto para recuperar la aprobación de la gec agregado por req 9000002857
+    oRespuesta = dGecAprobacion.recuperarRegistroxGEC(eGuiaCombustible.getId());
+    if (oRespuesta.estado==false){         
+    	throw new Exception(gestorDiccionario.getMessage("sgo.recuperarFallido",null,locale));
+    }
+    eGuiaCombustible.setAprobacionGec((GecAprobacion) oRespuesta.contenido.carga.get(0));
+    //Terminamos de recuperar la aprobación para la GEC agregado por req 9000002857
+    
     oRespuesta = dDetalleGec.recuperarRegistros(parametros);
     if (oRespuesta.estado == false) {
       	throw new Exception(gestorDiccionario.getMessage("sgo.recuperarFallido", null, locale));
@@ -1158,7 +1177,9 @@ public class GuiaCombustibleControlador {
      baos = uReporteador.generarReporteGec(titulo4,tituloReporte,  principal.getIdentidad(),eGuiaCombustible, locale);
     
      InputStream is = new ByteArrayInputStream(baos.toByteArray());
-     File tempFile = new File(directorio_archivo+"/GuiaCombustible"+ eGuiaCombustible.getNumeroSerie() + "-" + eGuiaCombustible.getNumeroGEC() +".pdf"); 
+     
+     //Cambiar eGuiaCombustible.getNumeroSerie() + "-" + eGuiaCombustible.getNumeroGEC() por eGuiaCombustible.gerNumeracionGec por req 9000002857
+     File tempFile = new File(directorio_archivo+"/GuiaCombustible"+ eGuiaCombustible.getNumeracionGec() +".pdf"); 
      tempFile.deleteOnExit();
     
     	 FileOutputStream out = new FileOutputStream(tempFile);
