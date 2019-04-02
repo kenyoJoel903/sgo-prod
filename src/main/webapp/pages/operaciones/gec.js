@@ -604,6 +604,11 @@ $(document).ready(function(){
 				    data: {	idTransportista:valorIdTransportista,
 				    		filtroProducto:valorIdProducto,
 				    		filtroFechaDiaOperativo:valorFecha,
+				    		
+				    		//Inicio Agregado por req 7000002671
+				    		filtroOperacion: $('#cmpFiltroOperacion option:selected').val(),
+				    		//Fin Agregado por req 7000002671
+				    		
 				    		filtroTipoConsulta:"agregar"
 				    	  },	
 				    success: function(respuesta) {

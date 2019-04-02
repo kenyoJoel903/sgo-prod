@@ -295,6 +295,13 @@ public class GuiaCombustibleControlador {
       if (httpRequest.getParameter("filtroTipoConsulta") != null && !httpRequest.getParameter("filtroTipoConsulta").isEmpty() ) {
           parametros.setFiltroParametro((httpRequest.getParameter("filtroTipoConsulta")));
       }
+      
+      //Inicio Agregado por incidencia 7000002671
+      if (httpRequest.getParameter("filtroOperacion") != null && !httpRequest.getParameter("filtroOperacion").isEmpty() ) {
+          parametros.setFiltroOperacion(Integer.parseInt(httpRequest.getParameter("filtroOperacion")));
+      }
+      //Fin Agregado por incidencia 7000002671
+      
       //Recuperar registros
       respuesta = dDetalleGec.recuperarRegistrosVista(parametros);
       respuesta.mensaje= gestorDiccionario.getMessage("sgo.listarExitoso",null,locale);

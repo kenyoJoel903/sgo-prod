@@ -143,6 +143,11 @@ public RespuestaCompuesta recuperarRegistrosVista(ParametrosListar argumentosLis
 
         sqlWhere = " WHERE t1.id_transportista = '" + argumentosListar.getIdTransportista() + "'";
         sqlWhere += " AND t1.id_producto = '" + argumentosListar.getFiltroProducto() + "'";
+        
+        //Inicio Agregado por incidente 7000002671
+        sqlWhere+=" AND t1.id_operacion='"+argumentosListar.getFiltroOperacion() +"'";
+        //Fin Agregado por incidente 7000002671
+        
         sqlWhere += " AND t1.fecha_operativa = '" + Utilidades.modificarFormatoFechaddmmaaaa(argumentosListar.getFiltroFechaDiaOperativo()) + "'";
 
         if (argumentosListar.getFiltroParametro() != null && argumentosListar.getFiltroParametro().equals("agregar")) {
