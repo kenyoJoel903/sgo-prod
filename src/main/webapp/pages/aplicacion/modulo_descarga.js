@@ -215,6 +215,12 @@ moduloDescarga.prototype.inicializarControles=function(){
       ref.recuperarVolumenTanque("Inicial");
   });
   
+  //Inicio Cambio por req 7000002670
+  this.obj.filtroOperacion.on("change",function(){ 
+      ref.listarDiasOperativos();         
+  });
+  //Fin Cambio por req 7000002670
+  
   this.obj.cmpTemperaturaInicialCentro=$("#cmpTemperaturaInicialCentro");
   //this.obj.cmpTemperaturaInicialCentro.inputmask("decimal", {digits:2});
   this.obj.cmpTemperaturaInicialCentro.inputmask("99.9");
