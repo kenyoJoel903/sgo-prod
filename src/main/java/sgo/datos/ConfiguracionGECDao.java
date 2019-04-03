@@ -101,17 +101,23 @@ public class ConfiguracionGECDao {
 		try {
 			consultaSQL.append("INSERT INTO ");
 			consultaSQL.append(NOMBRE_TABLA);
-			consultaSQL.append(" (id_operacion, correlativo, numero_serie, estado, anio, alias_operacion) ");
+			consultaSQL.append(" (id_operacion, correlativo, numero_serie, estado, anio, alias_operacion, creado_el,creado_por,actualizado_por,actualizado_el,ip_creacion,ip_actualizacion) ");
 
-			consultaSQL.append(" VALUES (:idOperacion,:correlativo,:nroSerie,:estado)");
+			consultaSQL.append(" VALUES (:idOperacion,:correlativo,:nroSerie,:estado, :Anio, :AliasOperacion,:CreadoEl,:CreadoPor,:ActualizadoPor,:ActualizadoEl,:IpCreacion,:IpActualizacion)");
 		
 			MapSqlParameterSource listaParametros= new MapSqlParameterSource();   
 			listaParametros.addValue("idOperacion", confGec.getIdOperacion());
 			listaParametros.addValue("correlativo", confGec.getCorrelativo());
 			listaParametros.addValue("nroSerie", confGec.getNumeroSerie());
 			listaParametros.addValue("estado", confGec.getEstado());	
-			listaParametros.addValue("aliasOperacion", confGec.getAliasOperacion());
-			listaParametros.addValue("anio", confGec.getAnio());			
+			listaParametros.addValue("AliasOperacion", confGec.getAliasOperacion());
+			listaParametros.addValue("Anio", confGec.getAnio());			
+			listaParametros.addValue("CreadoEl", confGec.getCreadoEl());
+			listaParametros.addValue("CreadoPor", confGec.getCreadoPor());
+			listaParametros.addValue("ActualizadoPor", confGec.getActualizadoPor());
+			listaParametros.addValue("ActualizadoEl", confGec.getActualizadoEl());
+			listaParametros.addValue("IpCreacion", confGec.getIpCreacion());
+			listaParametros.addValue("IpActualizacion", confGec.getIpActualizacion());
 			
 			SqlParameterSource namedParameters= listaParametros;
 			/*Ejecuta la consulta y retorna las filas afectadas*/

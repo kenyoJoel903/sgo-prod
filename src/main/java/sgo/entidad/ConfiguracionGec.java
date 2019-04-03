@@ -1,6 +1,6 @@
 package sgo.entidad;
 
-public class ConfiguracionGec {
+public class ConfiguracionGec extends EntidadBase {
 	
 	private int idConfiguracionGec;
 	

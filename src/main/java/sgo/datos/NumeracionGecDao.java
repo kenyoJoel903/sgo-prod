@@ -258,7 +258,7 @@ public class NumeracionGecDao {
 		return respuesta;
 	}
 	
-	public RespuestaCompuesta validaRegistroAlias(String aliasOperacion) {
+	public RespuestaCompuesta validaRegistroAlias(String aliasOperacion, int idOperacion) {
 		StringBuilder consultaSQL = new StringBuilder();
 		List<NumeracionGec> listaRegistros = new ArrayList<NumeracionGec>();
 		Contenido<NumeracionGec> contenido = new Contenido<NumeracionGec>();
@@ -288,7 +288,7 @@ public class NumeracionGecDao {
 			consultaSQL.append("FROM ");
 			consultaSQL.append(NOMBRE_VISTA);
 			consultaSQL.append(" t1 ");		
-			consultaSQL.append("WHERE t1.estado = 1 AND lower(t1.alias_operacion) = lower('" + aliasOperacion + "')");
+			consultaSQL.append("WHERE t1.estado = 1 AND t1.id_operacion != " + idOperacion + " AND lower(t1.alias_operacion) = lower('" + aliasOperacion + "')");
 			
 			listaRegistros = jdbcTemplate.query(consultaSQL.toString(),	parametros.toArray(), new NumeracionGecMapper());
 			contenido.totalRegistros = listaRegistros.size();

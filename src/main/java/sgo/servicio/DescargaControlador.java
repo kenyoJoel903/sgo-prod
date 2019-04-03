@@ -1172,7 +1172,7 @@ private AutorizacionEjecutadaDao dAutorizacionEjecutada;
 			 throw new Exception(gestorDiccionario.getMessage("sgo.recuperarFallido", null, locale));
 		 }
 		 Parametro directorioSGO = (Parametro) respuesta.contenido.carga.get(0);
-		 boolean tranferir = Utilidades.transferirArchivo(formulario.getArchivo(), directorioSGO.getValor() +  DIRECTORIO_DESCARGA_CISTERNAS , nombreSistemaArchivo);
+		 boolean tranferir = Utilidades.transferirArchivo(formulario.getArchivo(), directorioSGO.getValor().toLowerCase() +  DIRECTORIO_DESCARGA_CISTERNAS , nombreSistemaArchivo);
 		 if(tranferir == false) {
 			 throw new Exception("Ocurrió un error al guardar el archivo.");
 		 }
@@ -1294,7 +1294,7 @@ private AutorizacionEjecutadaDao dAutorizacionEjecutada;
 			 throw new Exception(gestorDiccionario.getMessage("sgo.recuperarFallido", null, locale));
 		 }
 		 Parametro parametroDirectorio = (Parametro) respuesta.contenido.carga.get(0);
-		 String pathAdjunto = parametroDirectorio.getValor() + DIRECTORIO_DESCARGA_CISTERNAS + "/" + archivo.getNombre_archivo_adjunto();
+		 String pathAdjunto = parametroDirectorio.getValor().toLowerCase() + DIRECTORIO_DESCARGA_CISTERNAS + "/" + archivo.getNombre_archivo_adjunto();
 		 File adjunto = new File(pathAdjunto);
 		 if(!adjunto.exists()) {
 			 throw new Exception("No existe el archivo adjunto.");
@@ -1356,7 +1356,7 @@ private AutorizacionEjecutadaDao dAutorizacionEjecutada;
 			 throw new Exception(gestorDiccionario.getMessage("sgo.recuperarFallido", null, locale));
 		 }
 		 Parametro parametroDirectorio = (Parametro) respuesta.contenido.carga.get(0);
-		 String pathAdjunto =  parametroDirectorio.getValor() + DIRECTORIO_DESCARGA_CISTERNAS + "/" + archivo.getNombre_archivo_adjunto();
+		 String pathAdjunto =  parametroDirectorio.getValor().toLowerCase() + DIRECTORIO_DESCARGA_CISTERNAS + "/" + archivo.getNombre_archivo_adjunto();
 		 File adjunto = new File(pathAdjunto);
 		 if(!adjunto.exists()) {
 			 throw new Exception("No existe directorio " + pathAdjunto);

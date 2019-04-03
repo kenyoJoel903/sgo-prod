@@ -246,7 +246,7 @@ public class NumeracionGecControlador {
 			   eNumeracionGec.setIpCreacion(direccionIp);
 			   
 			   //Valido primero si no hay otro registro con el mismo alias
-			   respuesta = dNumeracionGec.validaRegistroAlias(eNumeracionGec.getAliasOperacion());
+			   respuesta = dNumeracionGec.validaRegistroAlias(eNumeracionGec.getAliasOperacion(), eNumeracionGec.getIdOperacion());
 			   
 			   // Verifica si la accion se ejecuto de forma satisfactoria
 			   if (respuesta.estado == false) {
@@ -455,7 +455,7 @@ public class NumeracionGecControlador {
 			   }
 			   
 			   //Valido primero si no hay otro registro igual en BD
-			   respuesta = dNumeracionGec.validaRegistroAlias(eNumeracionGec.getAliasOperacion());
+			   respuesta = dNumeracionGec.validaRegistroAlias(eNumeracionGec.getAliasOperacion(), eNumeracionGec.getIdOperacion());
 			   
 			   // Verifica si la accion se ejecuto de forma satisfactoria
 			   if (respuesta.estado == false) {

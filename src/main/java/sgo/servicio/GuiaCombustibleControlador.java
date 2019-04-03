@@ -674,7 +674,13 @@ public class GuiaCombustibleControlador {
             	confGec.setAliasOperacion(temp[0]);		//se agrega por req 9000002857
             	confGec.setAnio(Integer.parseInt(temp[2]));	//se agrega por req 9000002857
             	confGec.setNumeroSerie(eGuiaCombustible.getNumeroSerie());
-            	confGec.setEstado(1);
+            	confGec.setActualizadoEl(Calendar.getInstance().getTime().getTime());
+            	confGec.setActualizadoPor(principal.getID()); 
+            	confGec.setCreadoEl(Calendar.getInstance().getTime().getTime());
+            	confGec.setCreadoPor(principal.getID());
+            	confGec.setIpActualizacion(direccionIp);
+            	confGec.setIpCreacion(direccionIp);
+            	confGec.setEstado(Constante.ESTADO_REGISTRADO);
             	
           	  	respuesta = dConfiguracionGec.guardarRegistro(confGec);
                 if (respuesta.estado==false){         
