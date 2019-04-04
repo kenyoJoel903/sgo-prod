@@ -24,20 +24,21 @@ import sgo.ws.sap.simularcrearproforma.SI_Sumular_Crear_Proforma_OutProxy;
 
 
 public class SimularCrearProformaServicioWS {
-
+	// ticket 9000003025
+	ServiceProperties property = new ServiceProperties();
 	private SI_Sumular_Crear_Proforma_OutProxy proxy;
 	
 	public RespuestaCompuesta consultar(Cliente eCliente, Proforma proforma){
 		RespuestaCompuesta respuesta = new RespuestaCompuesta();
 		
 		proxy = new SI_Sumular_Crear_Proforma_OutProxy();
-//		proxy.setEndpoint("http://petpidqc.petroperu.com.pe:50200/XISOAPAdapter/MessageServlet?senderParty=Proforma&senderService=BC_Simular_Crear&receiverParty=&receiverService=&interface=SI_Sumular_Crear_Proforma_Out&interfaceNamespace=urn:petroperu.com.pe:pmerp:sd:proforma");
-		proxy.setEndpoint("http://PEPINPRC.petroperu.com.pe:50600/XISOAPAdapter/MessageServlet?senderParty=Proforma&senderService=BC_Simular_Crear&receiverParty=&receiverService=&interface=SI_Sumular_Crear_Proforma_Out&interfaceNamespace=urn:petroperu.com.pe:pmerp:sd:proforma");
+		proxy.setEndpoint(property.getEndPointWS() + "/XISOAPAdapter/MessageServlet?senderParty=Proforma&senderService=BC_Simular_Crear&receiverParty=&receiverService=&interface=SI_Sumular_Crear_Proforma_Out&interfaceNamespace=urn:petroperu.com.pe:pmerp:sd:proforma");
+		
 		DT_Simular_Crear_Proforma_Request req = this.configurarRequest(proforma);
 		
 		try {
-//			DT_Simular_Crear_Proforma_Response res = proxy.SI_Sumular_Crear_Proforma_Out(req, "PISGOUSER", "P3tr0p3ru!");
-			DT_Simular_Crear_Proforma_Response res = proxy.SI_Sumular_Crear_Proforma_Out(req, "PISGOUSER", "P3tr0p3ru042016");
+			
+			DT_Simular_Crear_Proforma_Response res = proxy.SI_Sumular_Crear_Proforma_Out(req, property.getUserWS(), property.getPassWS());
 			return configurarRespCompuesta(res,proforma);
 		} catch (ZPI_Fault e) {
 

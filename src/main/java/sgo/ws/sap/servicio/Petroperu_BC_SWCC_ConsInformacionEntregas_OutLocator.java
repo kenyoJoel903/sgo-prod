@@ -7,17 +7,25 @@
 
 package sgo.ws.sap.servicio;
 
+import sgo.service.ServiceProperties;
+
 public class Petroperu_BC_SWCC_ConsInformacionEntregas_OutLocator extends org.apache.axis.client.Service implements sgo.ws.sap.servicio.Petroperu_BC_SWCC_ConsInformacionEntregas_Out {
 
-    public static final String USUARIO="PISGOUSER";
-    //IA
-     public static final String CLAVE="P3tr0p3ru!";
-    //IA public static final String CLAVE="P3tr0p3ru";
-//    public static final String CLAVE="P3tr0p3ru042016";
-    //IA
-     
+	// ticket 9000003025
+	ServiceProperties property;
+	
+    public static String USUARIO;
+    public static String CLAVE;
+    private java.lang.String HTTP_Port_address;
      
     public Petroperu_BC_SWCC_ConsInformacionEntregas_OutLocator() {
+    	
+    	property = new ServiceProperties();
+    	
+    	HTTP_Port_address = property.getEndPointWS() + "/XISOAPAdapter/MessageServlet?senderParty=Petroperu&senderService=BC_SWCC&receiverParty=&receiverService=&interface=ConsInformacionEntregas_Out&interfaceNamespace=urn%3Apetroperu.com.pe%3Apmerp%3Aswcc%3Asgo_informacion_entregas";
+    	USUARIO = property.getUserWS();
+    	CLAVE = property.getPassWS();
+    	
     }
 
 
@@ -79,14 +87,6 @@ public class Petroperu_BC_SWCC_ConsInformacionEntregas_OutLocator extends org.ap
     public void setHTTPS_PortEndpointAddress(java.lang.String address) {
         HTTPS_Port_address = address;
     }
-
-
-    // Use to get a proxy class for HTTP_Port
-    //IA
-    private java.lang.String HTTP_Port_address = "http://petpidqc:50200/XISOAPAdapter/MessageServlet?senderParty=Petroperu&senderService=BC_SWCC&receiverParty=&receiverService=&interface=ConsInformacionEntregas_Out&interfaceNamespace=urn%3Apetroperu.com.pe%3Apmerp%3Aswcc%3Asgo_informacion_entregas";
-    //private java.lang.String HTTP_Port_address = "http://PEPINPRC:50600/XISOAPAdapter/MessageServlet?senderParty=Petroperu&senderService=BC_SWCC&receiverParty=&receiverService=&interface=ConsInformacionEntregas_Out&interfaceNamespace=urn:petroperu.com.pe:pmerp:swcc:sgo_informacion_entregas";
-//    private java.lang.String HTTP_Port_address =   "http://PEPINPRC:50600/XISOAPAdapter/MessageServlet?senderParty=Petroperu&senderService=BC_SWCC&receiverParty=&receiverService=&interface=ConsInformacionEntregas_Out&interfaceNamespace=urn%3Apetroperu.com.pe%3Apmerp%3Aswcc%3Asgo_informacion_entregas";
-    //IA
     
     public java.lang.String getHTTP_PortAddress() {
         return HTTP_Port_address;
