@@ -4,17 +4,20 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.Locale;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
 
@@ -29,9 +32,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import sgo.entidad.GuiaCombustible;
 import sgo.entidad.Respuesta;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Clase base para hacer las validaciones.
@@ -900,6 +900,17 @@ public static boolean transferirArchivo(MultipartFile file, String directorio, S
 	} catch (Exception e) {
 		return false;
 	}
+}
+
+//ticket 9000003025
+public static BigDecimal bdFormat(BigDecimal monto) {
+	
+	if (monto != null && monto.intValue() > 0) {
+		return monto.setScale(2, RoundingMode.HALF_UP);
+	}
+	
+	BigDecimal result = new BigDecimal(0.0);
+	return result.setScale(2, RoundingMode.HALF_UP);
 }
 
 

@@ -12,6 +12,7 @@ import sgo.entidad.Proforma;
 import sgo.entidad.ProformaDetalle;
 import sgo.entidad.RespuestaCompuesta;
 import sgo.utilidades.Constante;
+import sgo.utilidades.Utilidades;
 import sgo.ws.sap.comun.ZPI_Fault;
 import sgo.ws.sap.simularcrearproforma.DT_Simular_Crear_Proforma_Request;
 import sgo.ws.sap.simularcrearproforma.DT_Simular_Crear_Proforma_RequestHearder_In;
@@ -182,56 +183,41 @@ public class SimularCrearProformaServicioWS {
 
 	private BigDecimal calcularCampos(ProformaDetalle it) {
 
-		System.out.println("-->it.getVolumen():"+it.getVolumen());
-		System.out.println("-->it.getDescuento():"+it.getDescuento());
-		System.out.println("-->it.getPrecio():"+it.getPrecio());
-		System.out.println("-->it.getRodaje():"+it.getRodaje());
-		System.out.println("-->it.getIsc():"+it.getIsc());
-		System.out.println("-->it.getIgv():"+it.getIgv());
-		System.out.println("-->it.getFise():"+it.getFise());
-		
-		BigDecimal volumen = it.getVolumen();
 		//A: calculos
-		//1.descuento en valor absoluto
 		it.setDescuento(it.getDescuento().abs());
-		//2.Precio neto = Precio - descuento
-		it.setPrecioNeto(it.getPrecio().subtract(it.getDescuento().abs()));
-		//3.acumulado = precio neto + rodaje + isc
-		it.setAcumulado(it.getPrecioNeto().add(it.getRodaje().add(it.getIsc())));
-		//4.Precio con descuento = acumulado + igv + fise
-		it.setPrecioDescuento(it.getAcumulado().add(it.getIgv().add(it.getFise())));
+		it.setPrecioNeto(it.getPrecio().subtract(it.getDescuento()));
+		it.setAcumulado(
+			it.getImporteTotal()
+			.subtract(it.getIgv())
+			.subtract(it.getFise())
+		);
+		it.setOtros(
+			it.getAcumulado()
+			.subtract(it.getPrecioNeto())
+			.subtract(it.getRodaje())
+			.subtract(it.getIsc())
+		);
+		it.setImporteTotal(Utilidades.bdFormat(it.getPrecioPercepcion().add(it.getImporteTotal())));
+		it.setPrecioDescuento(
+			it.getAcumulado()
+			.add(it.getIgv())
+			.add(it.getFise())
+		);
+		it.setPrecioPercepcion(it.getPrecioDescuento().add(it.getPrecioPercepcion()));
 		
-
-		System.out.println("-->it.getPrecioPercepcion():"+it.getPrecioPercepcion());
-		System.out.println("-->it.getImporteTotal():"+it.getImporteTotal());
-		
-		if(it.getPrecioPercepcion().intValue()<1){
-			//5a.Precio con percepcion= precio con descuento + percepcion (del servicio)
-			it.setPrecioPercepcion(it.getPrecioDescuento().add(it.getPrecioPercepcion()));
-		} else {
-//			BigDecimal percepDivid = it.getPrecioPercepcion().divide(volumen,RoundingMode.HALF_UP);
-//			//5b.Precio con percepcion= precio con descuento + percepcion (del servicio)
-//			it.setPrecioPercepcion(it.getPrecioDescuento().add(percepDivid));
-			
-			//5b.Precio con percepcion= precio con descuento + percepcion (del servicio)
-			it.setPrecioPercepcion(it.getPrecioDescuento().add(it.getPrecioPercepcion()));
-		}
-		//6.Total=percepcion(del servicio)+total(del servicio). tomar la percepcion antes de ser recalculada mas abajo
-		it.setImporteTotal(it.getPrecioPercepcion().multiply(volumen));
-		
-		//B: division
-		//dividiendo entre el volumen
+		//B: dividiendo entre el volumen
+		BigDecimal volumen = it.getVolumen();
 		it.setPrecio(it.getPrecio().divide(volumen,RoundingMode.HALF_UP));
 		it.setDescuento(it.getDescuento().divide(volumen,RoundingMode.HALF_UP));
 		it.setPrecioNeto(it.getPrecioNeto().divide(volumen,RoundingMode.HALF_UP));
 		it.setRodaje(it.getRodaje().divide(volumen,RoundingMode.HALF_UP));
 		it.setIsc(it.getIsc().divide(volumen,RoundingMode.HALF_UP));
-		it.setAcumulado(it.getAcumulado().divide(volumen,RoundingMode.HALF_UP));
+		it.setAcumulado(it.getAcumulado().divide(volumen, RoundingMode.HALF_UP));
+		it.setOtros(it.getOtros().divide(volumen, RoundingMode.HALF_UP));
 		it.setIgv(it.getIgv().divide(volumen,RoundingMode.HALF_UP));
 		it.setFise(it.getFise().divide(volumen,RoundingMode.HALF_UP));
 		it.setPrecioDescuento(it.getPrecioDescuento().divide(volumen,RoundingMode.HALF_UP));
 		it.setPrecioPercepcion(it.getPrecioPercepcion().divide(volumen,RoundingMode.HALF_UP));
-		it.setImporteTotal(it.getImporteTotal().divide(volumen,RoundingMode.HALF_UP));
 				
 		return it.getImporteTotal();
 	}

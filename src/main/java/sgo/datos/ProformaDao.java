@@ -283,6 +283,7 @@ public class ProformaDao {
 			consultaSQL.append("t1.precio_neto,");
 			consultaSQL.append("t1.rodaje,");
 			consultaSQL.append("t1.isc,");
+			consultaSQL.append("t1.otros,"); // ticket 9000003025
 			consultaSQL.append("t1.acumulado,");
 			consultaSQL.append("t1.igv,");
 			consultaSQL.append("t1.fise,");
@@ -366,8 +367,8 @@ public class ProformaDao {
 					consultaSQL.setLength(0);
 					consultaSQL.append("INSERT INTO ");
 					consultaSQL.append(NOMBRE_TABLA_DETALLE);
-					consultaSQL.append(" (fk_id_proforma, fk_id_planta, fk_id_producto, posicion, volumen, precio, descuento, precio_neto, rodaje, isc, acumulado, igv, fise, precio_descuento, precio_percepcion, importe_total) ");
-					consultaSQL.append(" VALUES (:fk_id_proforma, :fk_id_planta, :fk_id_producto, :posicion,:volumen, :precio, :descuento, :precio_neto, :rodaje, :isc, :acumulado, :igv, :fise, :precio_descuento, :precio_percepcion, :importe_total)");
+					consultaSQL.append(" (fk_id_proforma, fk_id_planta, fk_id_producto, posicion, volumen, precio, descuento, precio_neto, rodaje, isc, otros, acumulado, igv, fise, precio_descuento, precio_percepcion, importe_total) ");
+					consultaSQL.append(" VALUES (:fk_id_proforma, :fk_id_planta, :fk_id_producto, :posicion,:volumen, :precio, :descuento, :precio_neto, :rodaje, :isc, :otros, :acumulado, :igv, :fise, :precio_descuento, :precio_percepcion, :importe_total)");
 					
 					listaParametros= new MapSqlParameterSource();
 					listaParametros.addValue("fk_id_proforma", claveGenerada.getKey());
@@ -380,6 +381,7 @@ public class ProformaDao {
 					listaParametros.addValue("precio_neto", item.getPrecioNeto());
 					listaParametros.addValue("rodaje", item.getRodaje());
 					listaParametros.addValue("isc", item.getIsc());
+					listaParametros.addValue("otros", item.getOtros());
 					listaParametros.addValue("acumulado", item.getAcumulado());
 					listaParametros.addValue("igv", item.getIgv());
 					listaParametros.addValue("fise", item.getFise());

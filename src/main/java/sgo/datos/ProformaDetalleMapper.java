@@ -29,6 +29,7 @@ public class ProformaDetalleMapper implements RowMapper<ProformaDetalle>{
 			detalle.setPrecioNeto(rs.getBigDecimal("precio_neto"));
 			detalle.setRodaje(rs.getBigDecimal("rodaje"));
 			detalle.setIsc(rs.getBigDecimal("isc"));
+			detalle.setOtros(rs.getBigDecimal("otros")); // ticket 9000003025
 			detalle.setAcumulado(rs.getBigDecimal("acumulado"));
 			detalle.setIgv(rs.getBigDecimal("igv"));
 			detalle.setFise(rs.getBigDecimal("fise"));

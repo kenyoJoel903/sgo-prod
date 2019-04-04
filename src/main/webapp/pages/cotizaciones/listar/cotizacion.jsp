@@ -428,6 +428,11 @@
 												<td class="texto-derecha"><span id="vistaISC"></span></td>
 											</tr>
 											<tr>
+												<!-- ticket 9000003025 -->
+												<td>Otros:</td>
+												<td class="texto-derecha"><span id="vistaOtros"></span></td>
+											</tr>
+											<tr>
 												<td>Acumulado:</td>
 												<td class="texto-derecha"><span id="vistaAcumulado"></span>
 												</td>
@@ -562,6 +567,7 @@
 									<th>Precio Neto</th>
 									<th>Rodaje</th>
 									<th>ISC</th>
+									<th>Otros</th>
 									<th>Acumulado</th>
 									<th>IGV Neto</th>
 									<th>FISE</th>

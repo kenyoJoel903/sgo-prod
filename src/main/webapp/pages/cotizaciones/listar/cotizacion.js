@@ -73,6 +73,7 @@ $(document).ready(function(){
   moduloActual.columnasGrillaDetalle.push({ "data": 'precioNetoVista'});
   moduloActual.columnasGrillaDetalle.push({ "data": 'rodajeVista'});
   moduloActual.columnasGrillaDetalle.push({ "data": 'iscVista'});
+  moduloActual.columnasGrillaDetalle.push({ "data": 'otrosVista'}); // ticket 9000003025
   moduloActual.columnasGrillaDetalle.push({ "data": 'acumuladoVista'});
   moduloActual.columnasGrillaDetalle.push({ "data": 'igvVista'});
   moduloActual.columnasGrillaDetalle.push({ "data": 'fiseVista'});
@@ -96,6 +97,7 @@ $(document).ready(function(){
   moduloActual.definicionColumnasDetalle.push({"targets": 13, "searchable": false, "orderable": false, "visible":true, "class": "text-right"});
   moduloActual.definicionColumnasDetalle.push({"targets": 14, "searchable": false, "orderable": false, "visible":true, "class": "text-right"});
   moduloActual.definicionColumnasDetalle.push({"targets": 15, "searchable": false, "orderable": false, "visible":true, "class": "text-right"});
+  moduloActual.definicionColumnasDetalle.push({"targets": 16, "searchable": false, "orderable": false, "visible":true, "class": "text-right"});
   
   
   
@@ -578,6 +580,7 @@ $(document).ready(function(){
 			$("#vistaPrecioNeto").text(item.precioNetoVista);
 			$("#vistaRodaje").text(item.rodajeVista);
 			$("#vistaISC").text(item.iscVista);
+			$("#vistaOtros").text(item.otrosVista); // ticket 9000003025
 			$("#vistaAcumulado").text(item.acumuladoVista);
 			$("#vistaIgv").text(item.igvVista);
 			$("#vistaFise").text(item.fiseVista);
@@ -674,6 +677,7 @@ $(document).ready(function(){
         formulario.find("td[elemento-grupo='precioNeto']").text(item.precioNetoVista);
         formulario.find("td[elemento-grupo='rodaje']").text(item.rodajeVista);
         formulario.find("td[elemento-grupo='isc']").text(item.iscVista);
+        formulario.find("td[elemento-grupo='otros']").text(item.otrosVista); // ticket 9000003025
         formulario.find("td[elemento-grupo='acumulado']").text(item.acumuladoVista);
         formulario.find("td[elemento-grupo='igv']").text(item.igvVista);
         formulario.find("td[elemento-grupo='fise']").text(item.fiseVista);

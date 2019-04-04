@@ -23,6 +23,7 @@ public class ProformaDetalle implements Serializable {
 	private BigDecimal precioNeto;
 	private BigDecimal rodaje;
 	private BigDecimal isc;
+	private BigDecimal otros; // ticket 9000003025
 	private BigDecimal acumulado;
 	private BigDecimal igv;
 	private BigDecimal fise;
@@ -66,6 +67,11 @@ public class ProformaDetalle implements Serializable {
 	public String getImporteTotalVista() {
 		return Utilidades.formatearCotizacion(importeTotal, 2, 2);
 	}
+	
+	public String getOtrosVista() {
+		return Utilidades.formatearCotizacion(otros, 4, 4);
+	}
+	
 	public Integer getIdDetalleProforma() {
 		return idDetalleProforma;
 	}
@@ -167,5 +173,12 @@ public class ProformaDetalle implements Serializable {
 	}
 	public void setPosicion(Integer posicion) {
 		this.posicion = posicion;
+	}
+	
+	public BigDecimal getOtros() {
+		return otros;
+	}
+	public void setOtros(BigDecimal otros) {
+		this.otros = otros;
 	}
 }

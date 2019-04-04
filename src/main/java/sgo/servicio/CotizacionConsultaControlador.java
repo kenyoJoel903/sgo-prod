@@ -755,7 +755,7 @@ public class CotizacionConsultaControlador {
 //			}
 			if (StringUtils.isNotBlank(id)) {
 
-				String sql = "SELECT t1.nombre_producto, t1.nombre_planta, t1.volumen, t1.precio, t1.descuento, t1.precio_neto, t1.rodaje, t1.isc, t1.acumulado, t1.igv, t1.fise, t1.precio_descuento, t1.precio_percepcion, t1.importe_total"
+				String sql = "SELECT t1.nombre_producto, t1.nombre_planta, t1.volumen, t1.precio, t1.descuento, t1.precio_neto, t1.rodaje, t1.isc, t1.otros, t1.acumulado, t1.igv, t1.fise, t1.precio_descuento, t1.precio_percepcion, t1.importe_total"
 						+ " FROM sgo.v_detalle_proforma t1 "
 						+ " where t1.fk_id_proforma = "+id;
 				respuesta = dReporte.recuperarRegistrosJasper(sql);
