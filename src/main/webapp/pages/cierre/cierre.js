@@ -166,12 +166,21 @@ $(document).ready(function(){
     moduloActual.fechaPlanificadaSeleccionada.text(utilitario.formatearFecha(referenciaModulo.obj.datClienteApi.cell(indice,2).data()));
     moduloActual.estadoSeleccionado.text( utilitario.formatearEstadoDiaOperativo(referenciaModulo.obj.datClienteApi.cell(indice,9).data()));
     moduloActual.idEstadoSeleccionado =referenciaModulo.obj.datClienteApi.cell(indice,9).data();
+    
+    //Inicio Agregado por req 7000002679
+    moduloActual.obj.idDiaOperativoSeleccionado = referenciaModulo.obj.datClienteApi.cell(indice,1).data();
+    //Fin Agregado por req 7000002679
+    
   };
 
 //-----------------------FORMULARIO INGRESO DE AUTORIZACION --------------------------
   moduloActual.recuperarAutorizacionesXcodigoInterno = function(){
 	  //DATO QUE DEBE RECIBIR DEL MODULO CORRESPONDIENTE
 	  var codInterno = 'REP';
+	  
+	  //Se agrega idDiaOperativo e idOperacion por inc 7000002679 en el data del ajax
+	  var idDiaOperativoParam = moduloActual.obj.idDiaOperativoSeleccionado;
+	  var idOperacionParam = $('#filtroOperacion').val();
 
 	  var referenciaModulo = this;
 	  referenciaModulo.actualizarBandaInformacion(constantes.TIPO_MENSAJE_INFO,cadenas.PROCESANDO_PETICION);
@@ -180,7 +189,7 @@ $(document).ready(function(){
 		    type: "GET",
 		    url: "./autorizacion/recuperarPorCodigoInterno",
 		    contentType: "application/json",
-		    data: {codigoInterno:codInterno},	
+		    data: {codigoInterno:codInterno, idDiaOperativo: idDiaOperativoParam, idOperacion: idOperacionParam},	
 		    success: function(respuesta) {
 		    	if (!respuesta.estado) {
 		    		referenciaModulo.actualizarBandaInformacion(constantes.TIPO_MENSAJE_ERROR,respuesta.mensaje);

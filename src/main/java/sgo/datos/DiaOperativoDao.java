@@ -823,5 +823,57 @@ public class DiaOperativoDao {
   }
   return respuesta;
  }
+ 
+ //Inicio Agregado por inc 7000002679========================================
+ public RespuestaCompuesta recuperarDiasOperativosPosteriores(ParametrosListar argumentosListar ) {
+	 RespuestaCompuesta respuesta = new RespuestaCompuesta();
+	 Contenido<DiaOperativo> contenido = new Contenido<DiaOperativo>();
+	 List<DiaOperativo> listaRegistros = new ArrayList<DiaOperativo>();
+	 List<String> filtrosWhere = new ArrayList<String>();
+	 String sqlWhere="";
+	 List<Object> parametros = new ArrayList<Object>();
+	 
+	 try {
+		 
+		  if (argumentosListar.getIdOperacion() > 0){
+			  filtrosWhere.add(" t1.id_operacion = " + argumentosListar.getIdOperacion());
+		  }
+		  
+		  if (argumentosListar.getFiltroDiaOperativo() > 0){
+			  filtrosWhere.add(" t1.id_doperativo > " + argumentosListar.getFiltroDiaOperativo());
+		  }
+		  
+		  if (!filtrosWhere.isEmpty()) {	
+			  sqlWhere = "WHERE " + StringUtils.join(filtrosWhere, Constante.SQL_Y);
+		   
+		  }
+		  
+		  StringBuilder consultaSQL = new StringBuilder();
+		  consultaSQL.append("SELECT t1.* ");
+		  consultaSQL.append(" FROM sgo.v_dia_operativo_resumen t1 "); //antes v_dia_operativo
+		  consultaSQL.append(sqlWhere);
+		  consultaSQL.append(" order by fecha_operativa asc limit 1; ");
+		  
+		  listaRegistros = jdbcTemplate.query(consultaSQL.toString(),parametros.toArray(), new DiaOperativoMapper()); 
+		  
+		  contenido.carga = listaRegistros;
+		  respuesta.estado = true;
+		  respuesta.contenido = contenido;
+		  respuesta.contenido.totalRegistros = listaRegistros.size();
+		  respuesta.contenido.totalEncontrados = listaRegistros.size();   
+	 
+	  } catch (DataAccessException excepcionAccesoDatos) {
+		   excepcionAccesoDatos.printStackTrace();
+		   respuesta.error = Constante.EXCEPCION_ACCESO_DATOS;
+		   respuesta.estado = false;
+	  } catch (Exception excepcionGenerica) {
+	   excepcionGenerica.printStackTrace();
+	   respuesta.error = Constante.EXCEPCION_GENERICA;
+	   respuesta.estado = false;
+	  }
+	  return respuesta;
+
+ }
+ //Fin Agregado por inc 7000002679===========================================
 
 }

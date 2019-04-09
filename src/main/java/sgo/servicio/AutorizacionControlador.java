@@ -1,6 +1,5 @@
 package sgo.servicio;
 
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -8,13 +7,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import sgo.datos.AutorizacionDao;
@@ -31,6 +31,7 @@ import sgo.datos.AutorizacionEjecutadaDao;
 import sgo.datos.AutorizacionUsuarioDao;
 import sgo.datos.BitacoraDao;
 import sgo.datos.CisternaDao;
+import sgo.datos.DiaOperativoDao;
 import sgo.datos.EnlaceDao;
 import sgo.datos.UsuarioDao;
 import sgo.entidad.Autorizacion;
@@ -42,7 +43,6 @@ import sgo.entidad.DiaOperativo;
 import sgo.entidad.Enlace;
 import sgo.entidad.MenuGestor;
 import sgo.entidad.ParametrosListar;
-import sgo.entidad.Planificacion;
 import sgo.entidad.Respuesta;
 import sgo.entidad.RespuestaCompuesta;
 import sgo.entidad.Usuario;
@@ -64,6 +64,12 @@ public class AutorizacionControlador {
  private MenuGestor menu;
  @Autowired
  private CisternaDao dCisterna;
+ 
+//Inicio Agregado por incidencia 7000002679=============================================
+@Autowired
+private DiaOperativoDao dDiaOperativo;
+//Fin Agregado por incidencia 7000002679================================================
+
  @Autowired
  private AutorizacionDao dAutorizacion;
  @Autowired
@@ -485,7 +491,7 @@ public class AutorizacionControlador {
 
  @RequestMapping(value = URL_RECUPERAR_POR_CODIGO_RELATIVA, method = RequestMethod.GET)
  public @ResponseBody
- RespuestaCompuesta recuperaRegistrosPorCodigoInterno(String codigoInterno, Locale locale) {
+ RespuestaCompuesta recuperaRegistrosPorCodigoInterno(String codigoInterno, String idDiaOperativo, String idOperacion, Locale locale) {
   System.out.println("entra en recuperaRegistrosPorCodigoInterno");
   RespuestaCompuesta respuesta = null;
   AuthenticatedUserDetails principal = null;
@@ -502,6 +508,37 @@ public class AutorizacionControlador {
    if (!principal.getRol().searchPermiso(eEnlace.getPermiso())) {
     throw new Exception(gestorDiccionario.getMessage("sgo.faltaPermiso", null, locale));
    }
+   
+   //Inicio Agregado por incidencia 7000002679================================================
+   
+   ParametrosListar parametros=new ParametrosListar();
+   
+   if(idDiaOperativo != null && idOperacion != null){
+	   parametros.setFiltroDiaOperativo(Integer.parseInt(idDiaOperativo));
+	   parametros.setIdOperacion(Integer.parseInt(idOperacion));
+	   
+	   RespuestaCompuesta oRespuesta = dDiaOperativo.recuperarDiasOperativosPosteriores(parametros);
+	   if (oRespuesta.estado == false) {
+		   throw new Exception("Error al obtener los dias operativos posteriores");
+	   }
+	   
+	   if (oRespuesta.contenido.carga.size()>0){
+		   List<DiaOperativo> lstDiaOperativo = (List<DiaOperativo>) oRespuesta.contenido.carga;
+		   
+		   for(DiaOperativo eDiaOperativo : lstDiaOperativo){
+			   
+			   if (eDiaOperativo.getEstado() == DiaOperativo.ESTADO_CERRADO){
+				   
+			        respuesta.estado = false;
+			        respuesta.contenido = null;
+			        respuesta.mensaje = ("No se puede aperturar el día operativo " + Utilidades.convierteDateAString(eDiaOperativo.getFechaOperativa(),"dd/MM/yyyy") + ", sólo se puede cambiar Estado para el último día cerrado");
+			        return respuesta;
+			   }
+		   }
+	   }
+   }
+   
+   //Fin Agregado por incidencia 7000002679===================================================
 
    AutorizacionUsuario eAutorizacionUsuario = new AutorizacionUsuario();
    List<Usuario> listaUsuario = new ArrayList<Usuario>();
@@ -615,7 +652,7 @@ public class AutorizacionControlador {
  @RequestMapping(value = URL_RECUPERAR_AUTORIZACION_COMPLETA, method = RequestMethod.GET)
  public @ResponseBody
  RespuestaCompuesta recuperaAutorizacion(int idUsuario, int idAutorizacion, Locale locale) {
-  System.out.println("entra en recuperaRegistrosPorCodigoInterno");
+  System.out.println("entra en recuperaAutorizacion");
   RespuestaCompuesta respuesta = null;
   AuthenticatedUserDetails principal = null;
   try {
