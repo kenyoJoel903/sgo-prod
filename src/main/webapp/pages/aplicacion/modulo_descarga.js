@@ -216,9 +216,9 @@ moduloDescarga.prototype.inicializarControles=function(){
   });
   
   //Inicio Cambio por req 7000002670
-//  this.obj.filtroOperacion.on("change",function(){ 
-//      ref.listarDiasOperativos();         
-//  });
+  this.obj.filtroOperacion.on("change",function(){ 
+      ref.listarDiasOperativos();         
+  });
   //Fin Cambio por req 7000002670
   
   this.obj.cmpTemperaturaInicialCentro=$("#cmpTemperaturaInicialCentro");
