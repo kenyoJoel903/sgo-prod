@@ -582,7 +582,7 @@ $(document).ready(function(){
 	
 	console.log('indice: ' + indice);
 	//se descomenta por req 9000002857
-	referenciaModulo.obj.cmpNumeroGuia = referenciaModulo.obj.datClienteApi.cell(indice,2).data();
+	referenciaModulo.obj.cmpNumeroGuia.val(referenciaModulo.obj.datClienteApi.cell(indice,2).data());
 	
 	
 	referenciaModulo.obj.cmpEstadoGuia = referenciaModulo.obj.datClienteApi.cell(indice,7).data();	 
@@ -1574,7 +1574,8 @@ $(document).ready(function(){
 			estadoGuia = "Observado";
 		}
 		
-		var asunto = "Envio GEC  Nro. "+ referenciaModulo.obj.cmpNumeroGuia + "  con estado " + estadoGuia;
+		//Se agrega .val() a referenciaModulo.obj.cmpNumeroGuia por req 9000002857
+		var asunto = "Envio GEC  Nro. "+ referenciaModulo.obj.cmpNumeroGuia.val() + "  con estado " + estadoGuia;
 		
 		try {			
 			referenciaModulo.obj.cmpAsunto.val(asunto);

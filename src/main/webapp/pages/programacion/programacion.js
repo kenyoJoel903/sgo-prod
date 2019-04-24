@@ -973,6 +973,8 @@ $(document).ready(function(){
         	  $("#txtVigencia").val(fila.find("input[elemento-grupo='fechaIniTC']").val() + ' - ' + fila.find("input[elemento-grupo='fechaFinTC']").val());
         	  
         	  var idCisterna = fila.find("input[elemento-grupo='tracto-id']").val();
+        	  var numCompartimento = fila.find("input[elemento-grupo='compartimento']").val();
+        	  var compartimentoSeleccionado;
         	  
       	    $.ajax({
       	      type: constantes.PETICION_TIPO_GET,
@@ -1001,10 +1003,16 @@ $(document).ready(function(){
       		          "data-id-cisterna":item.idCisterna,
       		          text : etiqueta
       		          })); 
+      		          
+      		          console.log('etiqueta: ' + etiqueta);
+      		          console.log('numCompartimento: ' + numCompartimento);
+      		          if(etiqueta == numCompartimento){
+      		        	compartimentoSeleccionado = item;
+      		          }
       	        	}
       	        	
-      	        	var primerCompartimento = registros[0];
-      	        	moduloActual.seleccionarCompartimento(primerCompartimento.id, primerCompartimento.idTracto, primerCompartimento.idCisterna, primerCompartimento.capacidadVolumetrica, primerCompartimento.alturaFlecha);
+//      	        	var primerCompartimento = registros[0];
+      	        	moduloActual.seleccionarCompartimento(compartimentoSeleccionado.id, compartimentoSeleccionado.idTracto, compartimentoSeleccionado.idCisterna, compartimentoSeleccionado.capacidadVolumetrica, compartimentoSeleccionado.alturaFlecha);
 
       	          }else{
         	    	$("#txtCapVolumetrica").val('');

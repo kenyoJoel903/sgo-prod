@@ -531,7 +531,9 @@ private DiaOperativoDao dDiaOperativo;
 				   
 			        respuesta.estado = false;
 			        respuesta.contenido = null;
-			        respuesta.mensaje = ("No se puede aperturar el día operativo " + Utilidades.convierteDateAString(eDiaOperativo.getFechaOperativa(),"dd/MM/yyyy") + ", sólo se puede cambiar Estado para el último día cerrado");
+			        RespuestaCompuesta respTemp = dDiaOperativo.recuperarRegistro(Integer.parseInt(idDiaOperativo));
+			        DiaOperativo dioOperativoTemp = (DiaOperativo) respTemp.getContenido().getCarga().get(0);
+			        respuesta.mensaje = ("No se puede aperturar el día operativo " + Utilidades.convierteDateAString(dioOperativoTemp.getFechaOperativa(),"dd/MM/yyyy") + ", sólo se puede cambiar Estado para el último día cerrado");
 			        return respuesta;
 			   }
 		   }

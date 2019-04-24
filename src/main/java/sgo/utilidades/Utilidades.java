@@ -689,8 +689,16 @@ public static BigDecimal strToBigDecimal(String s) {
 	
 	BigDecimal out = new BigDecimal(0);
 	
+	//Inicio Agregado por incidente 7000002688
+	if( s == null) return out;
+	
+	String temp = s.replace(",", "");
+	
+	//Fin Agregado por incidente 7000002688
+	
     try { 
-    	out = new BigDecimal(s);
+    	//Se cambia s Por temp por inc 7000002688
+    	out = new BigDecimal(temp);
     } catch(Exception e) { 
     	e.getStackTrace();
     }
